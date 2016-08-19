@@ -1,6 +1,4 @@
 # RecreateDistributionAreaPolygon.py
-# B. Gates
-# 2012-03-06
 
 # Create DistributionArea polygon feature class
 # Copy it into the production database.
