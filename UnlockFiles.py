@@ -1,6 +1,4 @@
 # UnlockFiles.py
-# Barbara Gates
-# 11/30/15
 
 # OVERVIEW
 #
