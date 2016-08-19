@@ -1,7 +1,4 @@
 # ExportWeekend.py
-# Barbara Gates
-# 10/14/15
-
 
 # OVERVIEW
 #
