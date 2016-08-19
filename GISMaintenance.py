@@ -1,7 +1,4 @@
 # GISMaintenance.py
-# B. Gates
-# 9/17/15
-
 
 # Usage:
 #
