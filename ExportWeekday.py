@@ -1,7 +1,4 @@
 # ExportWeekday.py
-# Barbara Gates
-# November 10, 2015
-
 
 # OVERVIEW
 #
