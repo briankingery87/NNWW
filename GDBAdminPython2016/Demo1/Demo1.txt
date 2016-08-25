@@ -1,0 +1,7 @@
+http://desktop.arcgis.com/en/desktop/latest/analyze/arcpy-functions/workspace-properties.htm
+
+
+arcpy.Describe(r'C:\presentations\DevSummit2016\Demos\Demo1\Demo1.sde').connectionProperties.database
+arcpy.Describe(r'C:\presentations\DevSummit2016\Demos\Demo1\Demo1.sde').connectionProperties.version
+arcpy.Describe(r'C:\presentations\DevSummit2016\Demos\Demo1\Demo1.sde').connectionProperties.authentication_mode
+arcpy.Describe(r'C:\presentations\DevSummit2016\Demos\Demo1\Demo1.sde').currentRelease
