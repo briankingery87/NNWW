@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Newport News Waterworks Service Area</title>
+	<link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+	<link rel="stylesheet" href="http://js.arcgis.com/3.13/dijit/themes/claro/claro.css">
+	
+	<style>
+	
+		#Title {
+			position: absolute;
+			bottom: 50px;
+			right: 10px;
+			z-index: 1;
+		}
+
+		#Scalebar {
+			position: absolute;
+			bottom: 10px;
+			left: 20px;
+			background-color: white;
+			outline: black solid;
+			height: 42px;
+			width: 170px;
+			z-index: 0;
+			opacity: 1;
+		}
+
+		html, body, #map {
+			padding: 0;
+			margin: 0;
+			height: 100%;
+			width: 100%;
+		}
+
+		#HomeButton {
+			position: absolute;
+			top: 130px;
+			left: 20px;
+			z-index: 0;
+		}
+
+		#LocateButton {
+			position: absolute;
+			top: 90px;
+			left: 20px;
+			z-index: 0;
+		}
+
+		#BasemapToggle {
+			position: absolute;
+			bottom: 60px;
+			left: 18px;
+			z-index: 0;
+			opacity: 0.75;
+		}
+		#BasemapToggle:hover {
+			opacity: 1;
+		}
+
+		#navToolbar {
+			position: absolute;
+			top: 20px;
+			left: 60px;
+			z-index: 1;
+			background-color: gray; /*light gray #B2B2CC*/
+			border-radius: 25px;
+			padding: 5px;
+			color: white;
+			font-weight: bold;
+			opacity: 0.75;
+		}
+		#navToolbar:hover {
+			opacity: 1;
+		}
+
+
+		/*NAVIGATION TOOLBAR*/
+		.zoominIcon {
+			background-image: url(images/nav_zoomin.png);
+			width: 16px;
+			height: 16px;
+			border-radius: 25px;
+		}
+		.zoomoutIcon {
+			background-image: url(images/nav_zoomout.png);
+			width: 16px;
+			height: 16px;
+		}
+		/*.zoomfullextIcon {
+			background-image: url(images/nav_fullextent.png);
+			width: 16px;
+			height: 16px;
+		}*/
+		.zoomprevIcon {
+			background-image: url(images/nav_previous.png);
+			width: 16px;
+			height: 16px;
+		}
+		.zoomnextIcon {
+			background-image: url(images/nav_next.png);
+			width: 16px;
+			height: 16px;
+		}
+		.panIcon {
+			background-image: url(images/nav_pan.png);
+			width: 16px;
+			height: 16px;
+		}
+		.deactivateIcon {
+			background-image: url(images/nav_decline.png);
+			width: 16px;
+			height: 16px;
+	</style>
+	
+	<script src="http://js.arcgis.com/3.13/"></script>
+	
+	<script>
+	var map, navToolbar;
+
+	//List of required items
+	require(["esri/map",
+		
+		"esri/dijit/LocateButton",
+		"esri/dijit/HomeButton",
+		"esri/dijit/BasemapToggle",
+		"esri/dijit/Scalebar",
+		"esri/layers/FeatureLayer",
+		"esri/InfoTemplate",
+		
+		//NAVIGATION BAR
+		"esri/geometry/Extent",
+		"esri/toolbars/navigation",
+		"dijit/form/Button",
+		"dojo/on",
+		"dijit/registry",
+		"dojo/parser",
+		
+		
+		"dojo/domReady!"
+
+	//List of Functions
+	], function(Map,
+		
+		LocateButton,
+		HomeButton,
+		BasemapToggle,
+		Scalebar,
+		FeatureLayer,
+		InfoTemplate,
+		
+		//Required for Navigation Toolbar
+		Extent, Navigation, Button, on, registry, parser
+		
+	)
+
+	{
+		parser.parse();
+
+		var startExtent = new Extent({
+			//Extent finder 	http://help.arcgis.com/en/webapps/flexviewer/extenthelper/flexviewer_extenthelper.html
+			"xmin": -8570000,
+			"ymin": 4432000,
+			"xmax": -8478000,
+			"ymax": 4490000,
+			"spatialReference": {"wkid": 102100}
+		});
+		
+		map = new Map("map", {
+		basemap: "hybrid",  //For full list of pre-defined basemaps, navigate to http://arcg.is/1JVo6Wd
+		extent: startExtent,
+		//center: [-76.65, 37.35], // longitude, latitude
+		//zoom: 10
+	});
+
+		var geoLocate = new LocateButton({
+			map: map
+		}, "LocateButton");
+		geoLocate.startup();
+		
+		var homeButton = new HomeButton({
+			theme: "HomeButton",
+			map: map,
+			extent: null,
+			visible: true
+		}, "HomeButton");
+		homeButton.startup();
+
+		var toggle = new BasemapToggle({
+			map: map,
+			basemap: "streets"
+		}, "BasemapToggle");
+		toggle.startup();
+		
+		var scalebar = new Scalebar({
+			map: map,
+		  // "dual" displays both miles and kilmometers
+		  // "english" is the default, which displays miles
+		  // use "metric" for kilometers
+			scalebarUnit: "dual"
+		});
+		
+		navToolbar = new Navigation(map);
+			on(navToolbar, "extent-history-change", function () {
+				registry.byId("zoomprev").disabled = navToolbar.isFirstExtent();
+				registry.byId("zoomnext").disabled = navToolbar.isLastExtent();
+			});
+		
+		
+		var infoTemplate = new InfoTemplate("Attributes", "${*}");
+		
+		var hydrantsFeatureLayer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/Waterworks_MapIt_BaseMap/MapServer/12",
+		{
+			mode: FeatureLayer.MODE_ONDEMAND, //https://developers.arcgis.com/javascript/jsapi/featurelayer.html - Constants
+			infoTemplate: infoTemplate,
+			outFields: ['*']
+		});
+		
+		var parcelsFeatureLayer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/Waterworks_MapIt_BaseMap/MapServer/32",
+		{
+			mode: FeatureLayer.MODE_ONDEMAND,
+			infoTemplate: infoTemplate,
+			outFields: ['*']
+		});
+		
+		var pressurizedmainsFeatureLayer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/Waterworks_MapIt_BaseMap/MapServer/15",
+		{
+			mode: FeatureLayer.MODE_ONDEMAND,
+			infoTemplate: infoTemplate,
+			outFields: ['*']
+		});
+		
+		var waterqualityFeatureLayer = new FeatureLayer("http://localhost:6080/arcgis/rest/services/Waterworks_MapIt_BaseMap/MapServer/1",
+		{
+			mode: FeatureLayer.MODE_ONDEMAND,
+			infoTemplate: infoTemplate,
+			outFields: ['*']
+		});
+		
+		map.on("load", function (){
+			map.addLayer(hydrantsFeatureLayer);
+			map.addLayer(parcelsFeatureLayer);
+			map.addLayer(pressurizedmainsFeatureLayer);
+			map.addLayer(waterqualityFeatureLayer);
+		});
+		
+
+		
+	});
+
+	</script>
+	
+</head>
+  
+<body>
+	<div id="Title">
+		<a href="mailto:BKingery@nnva.gov?subject=JavaScript Waterworks GIS Map Inguiry">
+			<img src="images/Waterworks_Logo.png" style="width:100px;height:100px;">
+		</a>
+	</div>
+	
+	<div id="navToolbar" dojoType="esri/toolbars/navigation"> <!--DIV FOR NAVIGATION TOOLBAR-->
+		<div dojoType="dijit.form.Button" id="zoomin" iconClass="zoominIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.activate('zoomin');
+			</script>
+			Zoom In
+		</div>
+		<div dojoType="dijit.form.Button" id="zoomout" iconClass="zoomoutIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.activate('zoomout');
+			</script>
+			Zoom Out
+		</div>
+<!--		<div dojoType="dijit.form.Button" id="zoomfullext" iconClass="zoomfullextIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.zoomToFullExtent();
+			</script>
+			Full Extent
+		</div>
+		-->
+		<div dojoType="dijit.form.Button" id="zoomprev" iconClass="zoomprevIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.zoomToPrevExtent();
+			</script>
+			Prev Extent
+		</div>
+		<div dojoType="dijit.form.Button" id="zoomnext" iconClass="zoomnextIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.zoomToNextExtent();
+			</script>
+			Next Extent
+		</div>
+		<div dojoType="dijit.form.Button" id="pan" iconClass="panIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.activate('pan');
+			</script>
+			Pan
+		</div>
+		<div dojoType="dijit.form.Button" id="deactivate" iconClass="deactivateIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.deactivate();
+			</script>
+			Deactivate
+		</div>
+	</div>  
+
+
+	<div id="map"></div>
+  <div id="LocateButton"></div>
+  <div id="HomeButton"></div>
+	<div id="BasemapToggle"></div>
+	<div id ="Scalebar"></div>
+
+</body>
+</html>
