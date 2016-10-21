@@ -1,0 +1,119 @@
+
+#Title {
+	position: absolute;
+	bottom: 50px;
+	right: 10px;
+	z-index: 1;
+}
+
+#Scalebar {
+	position: absolute;
+	bottom: 10px;
+	left: 20px;
+	background-color: white;
+	outline: black solid;
+	height: 42px;
+	width: 170px;
+	z-index: 0;
+	opacity: 1;
+}
+
+html, body, #map {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#HomeButton {
+	position: absolute;
+	top: 130px;
+	left: 20px;
+	z-index: 0;
+}
+
+#LocateButton {
+	position: absolute;
+	top: 90px;
+	left: 20px;
+	z-index: 0;
+}
+
+#search {
+	display: block;
+	position: absolute;
+	z-index: 2;
+	top: 20px;
+	left: 650px;
+	opacity: 0.9;
+}
+#search:hover{
+	opacity: 1;
+}
+
+
+#BasemapToggle {
+    position: absolute;
+    bottom: 60px;
+    left: 18px;
+    z-index: 0;
+	opacity: 0.75;
+}
+#BasemapToggle:hover {
+	opacity: 1;
+}
+
+#navToolbar {
+	position: absolute;
+    top: 20px;
+    left: 60px;
+    z-index: 1;
+	background-color: gray; /*light gray #B2B2CC*/
+	border-radius: 25px;
+	padding: 5px;
+	color: white;
+	font-weight: bold;
+	opacity: 0.9;
+}
+#navToolbar:hover {
+	opacity: 1;
+}
+
+
+/*NAVIGATION TOOLBAR*/
+.zoominIcon {
+	background-image: url(images/nav_zoomin.png);
+	width: 16px;
+	height: 16px;
+	border-radius: 25px;
+}
+.zoomoutIcon {
+	background-image: url(images/nav_zoomout.png);
+	width: 16px;
+	height: 16px;
+}
+/*.zoomfullextIcon {
+	background-image: url(images/nav_fullextent.png);
+	width: 16px;
+	height: 16px;
+}*/
+.zoomprevIcon {
+	background-image: url(images/nav_previous.png);
+	width: 16px;
+	height: 16px;
+}
+.zoomnextIcon {
+	background-image: url(images/nav_next.png);
+	width: 16px;
+	height: 16px;
+}
+.panIcon {
+	background-image: url(images/nav_pan.png);
+	width: 16px;
+	height: 16px;
+}
+.deactivateIcon {
+	background-image: url(images/nav_decline.png);
+	width: 16px;
+	height: 16px;
+}

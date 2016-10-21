@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>Newport News Waterworks Service Area</title>
+	<link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+	<link rel="stylesheet" href="http://js.arcgis.com/3.13/dijit/themes/claro/claro.css">
+	<script src="http://js.arcgis.com/3.13/"></script>
+
+	<!--Provides link to my CSS file -->
+	<link rel = "stylesheet" href="styles.css">
+
+</head>
+  
+<body>
+	<div id="Title">
+		<a href="mailto:BKingery@nnva.gov?subject=JavaScript Waterworks GIS Map Inguiry">
+			<img src="images/Waterworks_Logo.png" style="width:100px;height:100px;">
+		</a>
+	</div>
+	
+	<div id="navToolbar" dojoType="esri/toolbars/navigation"> <!--DIV FOR NAVIGATION TOOLBAR-->
+		<div dojoType="dijit.form.Button" id="zoomin" iconClass="zoominIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.activate('zoomin');
+			</script>
+			Zoom In
+		</div>
+		<div dojoType="dijit.form.Button" id="zoomout" iconClass="zoomoutIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.activate('zoomout');
+			</script>
+			Zoom Out
+		</div>
+<!--		<div dojoType="dijit.form.Button" id="zoomfullext" iconClass="zoomfullextIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.zoomToFullExtent();
+			</script>
+			Full Extent
+		</div>
+		-->
+		<div dojoType="dijit.form.Button" id="zoomprev" iconClass="zoomprevIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.zoomToPrevExtent();
+			</script>
+			Prev Extent
+		</div>
+		<div dojoType="dijit.form.Button" id="zoomnext" iconClass="zoomnextIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.zoomToNextExtent();
+			</script>
+			Next Extent
+		</div>
+		<div dojoType="dijit.form.Button" id="pan" iconClass="panIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.activate('pan');
+			</script>
+			Pan
+		</div>
+		<div dojoType="dijit.form.Button" id="deactivate" iconClass="deactivateIcon">
+			<script type="dojo/on" data-dojo-event="click">
+				navToolbar.deactivate();
+			</script>
+			Deactivate
+		</div>
+	</div>  
+
+	<div id="search"></div>
+	<div id="map"></div>
+    <div id="LocateButton"></div>
+    <div id="HomeButton"></div>
+	<div id="BasemapToggle"></div>
+	<div id ="Scalebar"></div>
+
+	
+	<!--Provides link to my JavaScript (.js) file -->
+	<script src = "script.js"></script>
+</body>
+</html>
